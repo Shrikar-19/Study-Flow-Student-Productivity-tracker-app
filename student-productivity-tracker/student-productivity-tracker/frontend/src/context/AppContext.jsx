@@ -172,6 +172,7 @@ export function AppProvider({ children }) {
         completed: false,
         loggedCompletion: false,
         createdAt: today(),
+        activities: [], // New: track subtasks/activities
       },
     ]);
   }, []);
@@ -216,8 +217,8 @@ export function AppProvider({ children }) {
       {
         id: Date.now().toString(),
         title: goal.title,
-        target: Number(goal.target) || 100,
-        current: 0,
+        target: 100,
+        current: Number(goal.current) || 0,
         unit: goal.unit || "%",
         deadline: goal.deadline || "",
         color: goal.color || "#6366f1",
@@ -395,6 +396,27 @@ export function AppProvider({ children }) {
   })();
 
   const login = useCallback((userData) => {
+    // Clear previous user's data for fresh start
+    localStorage.removeItem("spt_tasks");
+    localStorage.removeItem("spt_goals");
+    localStorage.removeItem("spt_timetable");
+    localStorage.removeItem("spt_sessions");
+    localStorage.removeItem("spt_pomodoro");
+    // Reset states
+    setTasks([]);
+    setGoals([]);
+    setTimetable({
+      Monday: [],
+      Tuesday: [],
+      Wednesday: [],
+      Thursday: [],
+      Friday: [],
+      Saturday: [],
+      Sunday: [],
+    });
+    setStudySessions([]);
+    setPomodoro(defaultPomodoro);
+    // Save new user
     save("spt_user", userData);
     setUser(userData);
   }, []);

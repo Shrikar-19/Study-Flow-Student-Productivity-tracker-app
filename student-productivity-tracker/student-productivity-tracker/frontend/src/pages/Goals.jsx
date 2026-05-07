@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useApp } from "../context/AppContext";
 
 const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"];
-const EMPTY = { title: "", target: "", current: "", unit: "%", deadline: "", color: COLORS[0] };
+const EMPTY = { title: "", target: 100, current: "", unit: "%", deadline: "", color: COLORS[0] };
 
 export default function Goals() {
   const { goals, addGoal, updateGoal, deleteGoal } = useApp();
@@ -13,8 +13,8 @@ export default function Goals() {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (!form.title.trim() || !form.target) return;
-    addGoal({ ...form, current: Number(form.current) || 0 });
+    if (!form.title.trim()) return;
+    addGoal({ ...form });
     setForm(EMPTY);
     setShowForm(false);
   };
@@ -53,15 +53,9 @@ export default function Goals() {
           <div className="grid grid-cols-3 gap-3">
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Target *</label>
-              <input
-                type="number"
-                value={form.target}
-                onChange={(e) => setForm({ ...form, target: e.target.value })}
-                placeholder="100"
-                className="input"
-                min="1"
-                required
-              />
+              <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">100%</p>
+              </div>
             </div>
             <div>
               <label className="text-xs font-medium text-gray-500 mb-1 block">Current</label>
@@ -123,7 +117,7 @@ export default function Goals() {
       ) : (
         <div className="space-y-3">
           {goals.map((g) => {
-            const pct = Math.min(Math.round((g.current / g.target) * 100), 100);
+            const pct = Math.min(Math.round(((g.current || 0) / g.target) * 100), 100);
             const done = pct >= 100;
 
             return (
@@ -158,7 +152,7 @@ export default function Goals() {
                 <div className="mb-2">
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-gray-500">
-                      {g.current} / {g.target} {g.unit}
+                      {(g.current || 0)} / {g.target} {g.unit}
                     </span>
                     <span className="font-bold" style={{ color: g.color }}>
                       {pct}%
@@ -185,7 +179,7 @@ export default function Goals() {
                       onChange={(e) =>
                         setProgressInput((p) => ({ ...p, [g.id]: e.target.value }))
                       }
-                      placeholder={`Update (current: ${g.current})`}
+                      placeholder={`Update (current: ${g.current || 0})`}
                       className="input text-xs py-1.5 flex-1"
                       min="0"
                       max={g.target}

@@ -13,6 +13,11 @@ export default function Login() {
     e.preventDefault();
     if (!name.trim()) return setError("Please enter your name.");
     if (!email.trim()) return setError("Please enter your email address.");
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) || !email.toLowerCase().endsWith('@gmail.com')) {
+      return setError("Invalid Gmail. Please enter a valid format.");
+    }
     if (!education.trim()) return setError("Please enter your educational qualification.");
     login({ name: name.trim(), email: email.trim(), education: education.trim() });
   };
