@@ -1,5 +1,4 @@
 # 🎓 StudyFlow — Student Productivity Tracker
-### Built for HACKHIVE-2k26 | AITM Department of ECE
 
 ---
 
@@ -128,4 +127,3 @@ npm run build
 
 ---
 
-Built with ❤️ for HACKHIVE-2k26
